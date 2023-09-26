@@ -41,6 +41,10 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.sites',
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
 ]
 
 MIDDLEWARE = [
@@ -56,20 +60,49 @@ MIDDLEWARE = [
 ROOT_URLCONF = 'botiquqAdo.urls'
 
 TEMPLATES = [
-    {
+    { 
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
                 'django.template.context_processors.debug',
-                'django.template.context_processors.request',
+                'django.template.context_processors.request', 
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
             ],
         },
     },
 ]
+
+AUTHENTICATION_BACKENDS = (
+    'django.contrib.auth.backends.ModelBackend',
+    'allauth.account.auth_backends.AuthenticationBackend',
+)
+
+SITE_ID = 1
+
+# Handles the backend emails of the application 
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+# Allows authentication using either username or email 
+ACCOUNT_AUTHENTICATION_METHOD = 'username_email'
+ 
+"""
+The email vars tell allauth that the email is required and is
+mandatory to register for the application and that the
+email is required to be entered twice
+ """
+ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
+ACCOUNT_SIGNUP_EMAIL_ENTER_TWICE = True
+
+# Tells django auth that the minimum characters for an account name is 4 
+ACCOUNT_USERNAME_MIN_LENGTH = 4
+
+# Tells django the login urls to be used 
+LOGIN_URL = '/accounts/login/'
+LOGIN_REDIRECT_URL = '/'
 
 WSGI_APPLICATION = 'botiquqAdo.wsgi.application'
 
