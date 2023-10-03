@@ -23,12 +23,27 @@ def all_products(request):
     product = Product.objects.all()
     query = None
     category = None
+    sort = None
+    direction = None
 
     if request.GET:
         """
         Checking if the GET request contains certain parameters such as the product category or
-        the 'q' from the submitted search form 
+        the 'q' from the submitted search form or is there is a sort request.
         """
+
+        if 'sort' in request.GET:
+            sortkey = request.GET['sort']
+            sort = sortkey
+            if sortkey == 'name':
+                sortkey = 'lower_name'
+                product = product.annotate(lower_name=Lower('name'))
+
+            if 'direction' in request.GET:
+                direction = request.GET['direction']
+                if direction == 'desc':
+                    sortkey = f'-{sortkey}'
+            product = product.order_by(sortkey)
 
         if 'category' in request.GET:
             """
@@ -59,6 +74,10 @@ def all_products(request):
             queries = Q(name__icontains=query) | Q(description__icontains=query)
             product = product.filter(queries)
 
+
+    current_sorting = f'{sort}_{direction}'
+
+    
     """
     The context is allowing us to pass data through to the website front end of the website under certain
     names. 
@@ -70,6 +89,7 @@ def all_products(request):
         'products': product,
         'search_term': query,
         'current_categories': category,
+        'current_sorting': current_sorting,
     }
  
     return render(request, 'products.html', context)
