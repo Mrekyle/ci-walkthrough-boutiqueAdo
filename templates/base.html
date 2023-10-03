@@ -50,6 +50,7 @@
                 <!-- Adding the action to the form get request allows us to redirect the search query to the products page. Ensuring to also add it to the other html files that are in the includes file -->
                 <form method="GET" action="{% url 'products' %}">
                     <div class="input-group w-100">
+                        <!-- By using the name 'q' we pass that to the url. This allows us to check if that exists in the backend of the url GET request -->
                         <input class="form-control border border-black rounded-0" type="text" name="q" placeholder="Search Our Collections">
                         <div class="input-group-append">
                             <button class="form-control btn btn-black border border-black rounded-0" type="submit">

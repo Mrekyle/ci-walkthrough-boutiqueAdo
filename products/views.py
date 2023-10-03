@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect, reverse,  get_object_or_404
 from django.contrib import messages 
 # Generating a search query using the Q model 
 from django.db.models import Q
-from .models import Product
+from .models import Product, Category
 
 # Create your views here.
 
@@ -10,13 +10,35 @@ from .models import Product
 def all_products(request):
     """
     View to return and render the all products on the app,
-    allows the user to sort and search
+    allows the user to sort and search.
+
+    By first defining the query and category as none it ensures
+    that we have an empty search field to start with. Meaning no bugs or confusion will occur
+    with the search or category selections
+
+    Using the '__' is common in django search and filtering and general query's. This allows us to
+    search for the related names of certain items in the models. If they are related by foreign keys
     """ 
     
     product = Product.objects.all()
     query = None
+    category = None
 
     if request.GET:
+        """
+        Checking if the GET request contains certain parameters such as the product category or
+        the 'q' from the submitted search form 
+        """
+
+        if 'category' in request.GET:
+            """
+            By splitting the string into a list at the ',' we are then able to use that list as
+            as the filter parameters for the category
+            """
+            category = request.GET['category'].split(',')
+            product = product.filter(category__name__in=category)
+            category = Category.objects.filter(name__in=category)
+
         if 'q' in request.GET:
             query = request.GET['q']
             if not query:
@@ -37,9 +59,17 @@ def all_products(request):
             queries = Q(name__icontains=query) | Q(description__icontains=query)
             product = product.filter(queries)
 
+    """
+    The context is allowing us to pass data through to the website front end of the website under certain
+    names. 
+
+    Such as the current_categories context will allow us to display what current category has been selected
+    as a search parameter by the user on the front end of the website
+    """
     context = {
         'products': product,
         'search_term': query,
+        'current_categories': category,
     }
  
     return render(request, 'products.html', context)
