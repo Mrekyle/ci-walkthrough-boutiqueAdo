@@ -16,8 +16,8 @@ def all_products(request):
     that we have an empty search field to start with. Meaning no bugs or confusion will occur
     with the search or category selections
 
-    Using the '__' is common in django search and filtering and general query's. This allows us to
-    search for the related names of certain items in the models. If they are related by foreign keys
+    Using the '__' is common in django search and filtering and general query's by drilling into a related model
+    This allows us to search for the related names of certain items in the models. If they are related by foreign keys
     """ 
     
     product = Product.objects.all()
@@ -38,12 +38,14 @@ def all_products(request):
             if sortkey == 'name':
                 sortkey = 'lower_name'
                 product = product.annotate(lower_name=Lower('name'))
-
+            if sortkey == 'category':
+                sortkey = 'category__name'
             if 'direction' in request.GET:
                 direction = request.GET['direction']
                 if direction == 'desc':
                     sortkey = f'-{sortkey}'
             product = product.order_by(sortkey)
+
 
         if 'category' in request.GET:
             """
@@ -53,6 +55,7 @@ def all_products(request):
             category = request.GET['category'].split(',')
             product = product.filter(category__name__in=category)
             category = Category.objects.filter(name__in=category)
+
 
         if 'q' in request.GET:
             query = request.GET['q']
@@ -77,7 +80,7 @@ def all_products(request):
 
     current_sorting = f'{sort}_{direction}'
 
-    
+
     """
     The context is allowing us to pass data through to the website front end of the website under certain
     names. 
