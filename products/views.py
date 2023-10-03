@@ -3,6 +3,7 @@ from django.contrib import messages
 # Generating a search query using the Q model 
 from django.db.models import Q
 from .models import Product, Category
+from django.db.models.functions import Lower
 
 # Create your views here.
 
