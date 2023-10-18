@@ -63,17 +63,18 @@ MIDDLEWARE = [
 ROOT_URLCONF = 'botiquqAdo.urls'
 
 TEMPLATES = [
-    { 
+    {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [
             os.path.join(BASE_DIR, 'templates'),
-            os.path.join(BASE_DIR, 'templates', 'allauth'),  # All auth templates directory 
+            # All auth templates directory
+            os.path.join(BASE_DIR, 'templates', 'allauth'),
         ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
                 'django.template.context_processors.debug',
-                'django.template.context_processors.request', 
+                'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
                 'bag.contexts.bag_contents',
@@ -89,12 +90,12 @@ AUTHENTICATION_BACKENDS = (
 
 SITE_ID = 1
 
-# Handles the backend emails of the application 
+# Handles the backend emails of the application
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
-# Allows authentication using either username or email 
+# Allows authentication using either username or email
 ACCOUNT_AUTHENTICATION_METHOD = 'username_email'
- 
+
 """
 The email vars tell allauth that the email is required and is
 mandatory to register for the application and that the
@@ -104,10 +105,10 @@ ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
 ACCOUNT_SIGNUP_EMAIL_ENTER_TWICE = True
 
-# Tells django auth that the minimum characters for an account name is 4 
+# Tells django auth that the minimum characters for an account name is 4
 ACCOUNT_USERNAME_MIN_LENGTH = 4
 
-# Tells django the login urls to be used 
+# Tells django the login urls to be used
 LOGIN_URL = '/accounts/login/'
 LOGIN_REDIRECT_URL = '/'
 
@@ -173,4 +174,4 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 FREE_DELIVERY_THRESHOLD = 50
-STANDARD_DELIVERY_PERCENTAGE = 10
+STANDARD_DELIVERY_PERCENTAGE = 0.8
