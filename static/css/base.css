@@ -96,6 +96,22 @@ a.category-badge > span.badge:hover {
     cursor: pointer;
 }
 
+.message-container {
+    position: fixed;
+    top: 72px;
+    right: 15px;
+    /* z-index means that it will always be placed on top of everything if the number is higher than everything else  */
+    z-index: 9999999999;
+}
+
+.custom-toast {
+    overflow: visible;
+}
+
+.toast-capper {
+    height: 2px;
+}
+
 /* -------------------------------- Media Queries */
 
 /* Slightly larger container on xl screens */
