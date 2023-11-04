@@ -89,8 +89,7 @@ class OrderLineItem(models.Model):
         and update the order total.
         """
 
-        if not self.order_number:
-            self.lineitem_total = self.product.price * self.quantity
+        self.lineitem_total = self.product.price * self.quantity
         super().save(*args, **kwargs)
 
     def __str__(self):
