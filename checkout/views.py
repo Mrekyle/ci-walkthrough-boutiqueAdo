@@ -84,16 +84,17 @@ def checkout(request):
 
             # Redirecting the user once the checkout has been completed
             return redirect(reverse('checkout_success'), args=[order.order_number])
-    else:
-        # If there is an error in any of the code above/with the basket/checkout process an error message is displayed
-        messages.error(
-            request, 'There is an error with your shopping bag. \
-                Please contact us for further assistance!')
+        else:
+            # If there is an error in any of the code above/with the basket/checkout process an error message is displayed
+            messages.error(
+                request, 'There is an error with your shopping bag. \
+                    Please contact us for further assistance!')
 
         """
             Getting the items from inside of the bag to allow the calculation
-            of the grand_total and for payment methods to be submitted 
+            of the grand_total and for payment methods to be submitted
         """
+    else:
         bag = request.session.get('bag', {})
         if not bag:
             messages.error(
@@ -121,7 +122,7 @@ def checkout(request):
         messages.warning(
             request, 'Stripe public key is missing. Please contact the Admin team to get this fixed.')
 
-    template = 'checkout.html'
+    template = 'checkout/checkout.html'
     context = {
         'order_form': order_form,
         'stripe_public_key': stripe_public_key,
@@ -147,7 +148,7 @@ def checkout_success(request, order_number):
     # By setting the order_number we can use it without prefixing with 'order....'
     order = get_object_or_404(Order, order_number=order_number)
 
-    messages.success(request, f'Order succesfully processed. \
+    messages.success(request, f'Order successfully processed. \
                      Your order number is {order_number}. \
                         An email confirmation will be sent to {order.email} shortly.')
 
@@ -162,8 +163,8 @@ def checkout_success(request, order_number):
     template = 'checkout/checkout_success.html'
     context = {
         'order': order,
-
+        'save_info': save_info,
     }
 
     # Rendering the template with the context included
-    return render(request, template, context)
+    return redirect(request, template, context)
