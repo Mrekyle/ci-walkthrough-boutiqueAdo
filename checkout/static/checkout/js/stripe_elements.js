@@ -57,6 +57,8 @@ form.addEventListener('submit', function (ev) {
     // to prevent multiple submissions
     card.update({ 'disabled': true });
     $('#submit-button').attr('disabled', true);
+    $('#payment-form').fadeToggle(100);
+    $('#loading-overlay').fadeToggle(100);
 
     // Stripes validation functions 
     stripe.confirmCardPayment(clientSecret, {
@@ -73,6 +75,8 @@ form.addEventListener('submit', function (ev) {
                 <span>${result.error.message}</span>
                 `;
             $(errorDiv).html(html);
+            $('#payment-form').fadeToggle(100);
+            $('#loading-overlay').fadeToggle(100);
             // Logging out the error for development debugging
             console.log(result.error.message);
             // If there is an error. Re enable the card element and submit buttons for the user to fix the problem 
