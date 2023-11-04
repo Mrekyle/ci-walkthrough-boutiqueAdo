@@ -1,3 +1,5 @@
+
+
 from django.shortcuts import render, redirect, reverse, get_object_or_404
 from django.contrib import messages
 from django.conf import settings
@@ -8,9 +10,6 @@ from products.models import Product
 from bag.contexts import bag_contents
 
 import stripe
-
-stripe_public_key = 'pk_test_51O3xR7HkfpmhxD3hoRtHTWXd5nkIiUss1qbiYcM5qYiKaZs4b2UjfQzbskcqvy0UkS7yTwAzlKuJMWMQLGET5SMp002vPnkcyP'
-stripe_secret_key = 'sk_test_51O3xR7HkfpmhxD3hsCduz73SBhERMOxVpyCkgAzQKgfySNJNmXivyMm2YokyjHXNHaL38DrXu8WFfci1jIETyqXk00v10p9tju'
 
 
 def checkout(request):
