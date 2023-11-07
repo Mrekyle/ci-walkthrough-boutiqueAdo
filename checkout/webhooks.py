@@ -54,3 +54,24 @@ def webhook(request):
 
         return HttpResponse(status=200)
     """
+
+    handler = StripeWH_Handler(request)
+
+    # Relevant web hooks handlers to the project
+    event_map = {
+        'payment_intent.succeeded': handler.handle_payment_intent_succeeded,
+        'payment_intent.payment_failed': handler.handle_payment_intent_payment_failed
+    }
+
+    # Getting the webhook from stripe that was sent along with the payment intent.
+    # If no match is found then use the generic webhooks provided by stripe
+    event_type = event['type']
+
+    # If there is a handler that matches get it from the dictionary and add it to a variable
+    event_handler = event_map.get(event_type, handler.handle_event)
+
+    # Calling the event handler
+    response = event_handler(event)
+
+    # Returning the event to stripe
+    return response
