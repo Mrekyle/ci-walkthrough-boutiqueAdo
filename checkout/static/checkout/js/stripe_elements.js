@@ -64,6 +64,33 @@ form.addEventListener('submit', function (ev) {
     stripe.confirmCardPayment(clientSecret, {
         payment_method: {
             card: card,
+            // Billing and shipping information can be different. So it is good practice to have both in place 
+            // and add an option to allow the user to set them to be the same details 
+            billing_details: {
+            // From the form we get the information required and trim any extra characters. Then setting it in an object with a key
+                name: $.trim(form.full_name.value),
+                phone: $.trim(form.phone_number.value),
+                email: $.trim(form.email.value),
+                address : {
+                    line1: $.trim(form.street_address1.value),
+                    line2: $.trim(form.street_address2.value),
+                    city: $.trim(form.town_or_city.value),
+                    country: $.trim(form.country.value),
+                    state: $.trim(form.county.value),
+                }
+            },
+            shipping: {
+                name: $.trim(form.full_name.value),
+                phone: $.trim(form.phone_number.value),
+                address : {
+                    line1: $.trim(form.street_address1.value),
+                    line2: $.trim(form.street_address2.value),
+                    city: $.trim(form.town_or_city.value),
+                    country: $.trim(form.country.value),
+                    postal_code: $.trim(form.postcode.value),
+                    state: $.trim(form.county.value),
+                }
+            }
         }
     }).then(function (result) {
         if (result.error) {
