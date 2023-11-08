@@ -27,10 +27,10 @@ def cache_checkout_data(request):
 
         """
             Modifying the stripe payment intent, to catch if the user wants to save the shipping and
-            billing information to there user account 
+            billing information to there user account
         """
         stripe.PaymentIntent.modify(pid, metadata={
-            'bag': json.dumps(request.session.get(bag)),
+            'bag': json.dumps(request.session.get('bag', {})),
             'save_info': request.POST.get('save_info'),
             'username': request.user,
         })
