@@ -3,8 +3,10 @@
 {% block head_title %}
     {% trans "Email Address" %}
 {% endblock head_title %}
-{% block content %}
-    <h1>{% trans "Email Address" %}</h1>
+{% block inner_content %}
+<hr>
+<h2 class="logo-font mb-4">{% trans "Change Email" %}</h2>
+<hr>
     {% if emailaddresses %}
         {% if current_emailaddress %}
             <p>
@@ -17,6 +19,7 @@
             </p>
             <form method="post" action="{% url 'account_email' %}">
                 {% csrf_token %}
+                {{ form|crispy }}
                 <input type="hidden" name="email" value="{{ new_emailaddress.email }}">
                 <button type="submit" name="action_send">{% trans 'Re-send Verification' %}</button>
             </form>
@@ -30,4 +33,4 @@
         {{ form.as_p }}
         <button name="action_add" type="submit">{% trans "Change Email" %}</button>
     </form>
-{% endblock content %}
+{% endblock inner_content %}
