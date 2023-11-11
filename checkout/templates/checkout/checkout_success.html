@@ -17,12 +17,21 @@
     <div class="overlay"></div>
     <div class="container">
         <div class="row">
-            <div class="col">
-                <hr>
-                <h2 class="logo-font mb-4">Thank You</h2>
-                <hr>
-                <p class="text-black">Your order information is below. A confirmation email will be sent to <strong>{{ order.email }}</strong>.</p>
-            </div>
+            {% if from_profile %}
+                <div class="col">
+                    <hr>
+                        <h2>Previous Order: {{ order.order_number }}</h2>
+                    <hr>
+                    <p class="text-muted small">If you have any other concerns about this order. Please contact support and we will get back to you as soon as we can</p>
+                </div>
+            {% else %}
+                <div class="col">
+                    <hr>
+                        <h2 class="logo-font mb-4">Thank You</h2>
+                    <hr>
+                    <p class="text-black">Your order information is below. A confirmation email will be sent to <strong>{{ order.email }}</strong>.</p>
+                </div>
+            {% endif %}
         </div>
 
         <div class="row">
@@ -192,12 +201,21 @@
         </div>
         <div class="row">
 			<div class="col-12 col-lg-7 text-right">
-				<a href="{% url 'products' %}?category=new_arrivals,deals,clearance" class="btn btn-black rounded-0 my-2">
-					<span class="icon mr-2">
-						<i class="fas fa-gifts"></i>
-					</span>
-					<span class="text-uppercase">Now check out the latest deals!</span>
-				</a>
+                {% if from_profile %}
+                    <a href="{% url 'profile' %}" class="btn btn-black rounded-0 my-2">
+                        <span class="icon mr-2">
+                            <i class="fas fa-angle-left"></i>
+                        </span>
+                        <span class="text-uppercase">Back to Profile</span>
+                    </a>
+                {% else %}
+                    <a href="{% url 'products' %}?category=new_arrivals,deals,clearance" class="btn btn-black rounded-0 my-2">
+                        <span class="icon mr-2">
+                            <i class="fas fa-gifts"></i>
+                        </span>
+                        <span class="text-uppercase">Now check out the latest deals!</span>
+                    </a>
+                {% endif %}
 			</div>
 		</div>
     </div>
