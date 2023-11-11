@@ -1,6 +1,8 @@
 from django.shortcuts import render, get_object_or_404
+from django.contrib import messages
 
-from .models import UserProfile
+from . models import UserProfile
+from . forms import UserProfileForm
 
 # Create your views here.
 
@@ -12,9 +14,27 @@ def profile(request):
 
     profile = get_object_or_404(UserProfile, user=request.user)
 
+    if request.method == 'POST':
+        form = UserProfileForm(request.POST, instance=profile)
+        if form.is_valid():
+            form.save()
+            messages.success(request, f'Information updated successfully!')
+        else:
+            messages.error(request, f'Information update failed. Please try again or \
+                           contact us for further support')
+
+    # Getting the users order history and returning all of the previous orders
+    orders = profile.orders.all()
+
+    # Populating the form with the users information set from making a purchase
+    form = UserProfileForm(instance=profile)
+
     template = 'profiles.html'
     context = {
-        'profile': profile,
+        'form': form,
+        'orders': orders,
+        # Allows us to avoid displaying certain information when on the profile page
+        'on_profile_page': True,
     }
 
     return render(request, template, context)
