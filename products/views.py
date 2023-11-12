@@ -129,9 +129,9 @@ def add_product(request):
         form = ProductForm(request.POST, request.FILES)
 
         if form.is_valid():
-            form.save()
+            product = form.save()
             messages.success(request, f"Product successfully added")
-            return redirect(reverse('add_product'))
+            return redirect(reverse('product_detail', args=[product.id]))
         else:
             messages.error(request, f"Oops, something went wrong. Please check for errors and try again. \
                            If the problem persists, please contact support for further assistance.")
@@ -160,7 +160,7 @@ def edit_product(request, product_id):
 
     if request.method == 'POST':
         # Ensuring that the instance of the product form is the current one selected
-        form = ProductForm(request.POST, request.Files, instance=product)
+        form = ProductForm(request.POST, request.FILES, instance=product)
         if form.is_valid():
             form.save()
             messages.success(
@@ -186,17 +186,16 @@ def edit_product(request, product_id):
     return render(request, template, context)
 
 
-def delete_product(request):
+def delete_product(request, product_id):
     """
-        Deletes a product
+        Deletes a product. When that certain url and product id has
+        been accessed in the url.
     """
 
-    template = 'delete_product.html'
+    # Getting the product using the products id
+    product = get_object_or_404(Product, pk=product_id)
+    # Deleting the product with the delete method
+    product.delete()
+    messages.success(request, f'{product.name} has been deleted successfully.')
 
-    form = None
-
-    context = {
-        'form': form,
-    }
-
-    return render(request, template, context)
+    return redirect(reverse('products'))
