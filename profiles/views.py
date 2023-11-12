@@ -1,6 +1,8 @@
 from django.shortcuts import render, get_object_or_404
 from django.contrib import messages
 
+from django.contrib.auth.decorators import login_required
+
 from . models import UserProfile
 from . forms import UserProfileForm
 from checkout.models import Order
@@ -8,6 +10,7 @@ from checkout.models import Order
 # Create your views here.
 
 
+@login_required
 def profile(request):
     """
         Renders the profile page
@@ -41,6 +44,7 @@ def profile(request):
     return render(request, template, context)
 
 
+@login_required
 def order_history(request, order_number):
     """
         Rendering the order history of the users order. When the user

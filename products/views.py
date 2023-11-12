@@ -6,6 +6,9 @@ from .models import Product, Category
 from django.db.models.functions import Lower
 from products.forms import ProductForm
 
+# Requires the user to be logged into the application to view the url
+from django.contrib.auth.decorators import login_required
+
 # Create your views here.
 
 
@@ -114,10 +117,22 @@ def product_detail(request, product_id):
     return render(request, 'product_detail.html', context)
 
 
+@login_required
 def add_product(request):
     """
         Renders the product management page for the staff of the application
     """
+
+    """
+        Checking if the store owner/admin is logged in. And if not. 
+        Then redirecting the user back to the home page, as they dont have access
+        to view that page
+    """
+
+    if not request.user.is_superuser:
+        messages.error(request, f'Sorry, you dont have access to this page. \
+                       Only store owners can do that!')
+        return redirect(reverse('home'))
 
     """
         Handling the form being submitted and catching the information
@@ -150,10 +165,16 @@ def add_product(request):
     return render(request, template, context)
 
 
+@login_required
 def edit_product(request, product_id):
     """
         Renders the edit a product view
     """
+
+    if not request.user.is_superuser:
+        messages.error(request, f'Sorry, you dont have access to this page. \
+                       Only store owners can do that!')
+        return redirect(reverse('home'))
 
     # Getting the products previous information
     product = get_object_or_404(Product, pk=product_id)
@@ -186,11 +207,17 @@ def edit_product(request, product_id):
     return render(request, template, context)
 
 
+@login_required
 def delete_product(request, product_id):
     """
         Deletes a product. When that certain url and product id has
         been accessed in the url.
     """
+
+    if not request.user.is_superuser:
+        messages.error(request, f'Sorry, you dont have access to this page. \
+                       Only store owners can do that!')
+        return redirect(reverse('home'))
 
     # Getting the product using the products id
     product = get_object_or_404(Product, pk=product_id)
