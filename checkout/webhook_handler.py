@@ -143,7 +143,7 @@ class StripeWH_Handler:
                 # Sending the confirmation email to the user once it has been saved to the database
                 self._send_confirmation_email(order)
                 return HttpResponse(
-                    content=f'Webhook received: {event["type"] | SUCCESS: Verified order exists in the database.}',
+                    content=f'Webhook received: {event["type"]} | SUCCESS: Verified order exists in the database.',
                     status=200)
             else:
                 order = None
