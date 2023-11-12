@@ -119,8 +119,25 @@ def add_product(request):
         Renders the product management page for the staff of the application
     """
 
-    # Form to be used on the template
-    form = ProductForm()
+    """
+        Handling the form being submitted and catching the information
+
+        Catching the information by using request.post and catching the files
+        by using the request.files method
+    """
+    if request.method == 'POST':
+        form = ProductForm(request.POST, request.FILES)
+
+        if form.is_valid():
+            form.save()
+            messages.success(request, f"Product successfully added")
+            return redirect(reverse('add_product'))
+        else:
+            messages.error(request, f"Oops, something went wrong. Please check for errors and try again. \
+                           If the problem persists, please contact support for further assistance.")
+    else:
+        # Form to be used on the template
+        form = ProductForm()
 
     # Template of the view
     template = 'add_product.html'

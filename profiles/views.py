@@ -23,9 +23,9 @@ def profile(request):
         else:
             messages.error(request, (f'Information update failed. Please try again or \
                            contact us for further support'))
-
-    # Getting the users order history and returning all of the previous orders
-    orders = profile.orders.all()
+    else:
+        # Getting the users order history and returning all of the previous orders
+        orders = profile.orders.all()
 
     # Populating the form with the users information set from making a purchase
     form = UserProfileForm(instance=profile)
