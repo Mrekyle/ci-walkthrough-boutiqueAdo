@@ -105,6 +105,9 @@ SITE_ID = 1
 # Handles the backend emails of the application
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
+# Default from email that is used to send the confirmation emails to the user after a purchase from the store
+DEFAULT_FROM_EMAIL = 'botiqueado@example.com'
+
 # Allows authentication using either username or email
 ACCOUNT_AUTHENTICATION_METHOD = 'username_email'
 
