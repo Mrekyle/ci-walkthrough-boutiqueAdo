@@ -148,3 +148,55 @@ def add_product(request):
     }
 
     return render(request, template, context)
+
+
+def edit_product(request, product_id):
+    """
+        Renders the edit a product view
+    """
+
+    # Getting the products previous information
+    product = get_object_or_404(Product, pk=product_id)
+
+    if request.method == 'POST':
+        # Ensuring that the instance of the product form is the current one selected
+        form = ProductForm(request.POST, request.Files, instance=product)
+        if form.is_valid():
+            form.save()
+            messages.success(
+                request, f'Successfully edited product: {product.name}')
+            # Returning the user to the newly edited product page
+            return redirect(reverse('product_detail', args=[product.id]))
+        else:
+            messages.error(request, f'Oops, somethings gone wrong. Please check for errors and try again. \
+                            Or contact support for further assistance.')
+    else:
+        # Filling the form with the products current information
+        form = ProductForm(instance=product)
+        # Alerting the user of the product they are currently editing
+        messages.info(request, f'You are currently editing {product.name}')
+
+    template = 'edit_product.html'
+
+    context = {
+        'form': form,
+        'product': product,
+    }
+
+    return render(request, template, context)
+
+
+def delete_product(request):
+    """
+        Deletes a product
+    """
+
+    template = 'delete_product.html'
+
+    form = None
+
+    context = {
+        'form': form,
+    }
+
+    return render(request, template, context)
