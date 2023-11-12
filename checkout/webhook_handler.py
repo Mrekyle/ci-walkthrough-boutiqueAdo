@@ -5,6 +5,7 @@
 from django.http import HttpResponse
 from .models import Order, OrderLineItem
 from products.models import Product
+from profiles.models import UserProfile
 
 import stripe
 import json
@@ -48,6 +49,24 @@ class StripeWH_Handler:
         for field, value in shipping_details.address_items():
             if value == "":
                 shipping_details.address[field] = None
+
+        profile = None
+        username = intent.metadata.username
+
+        # Checking if the user is authenticated by comparing the values of the username
+        if username != 'AnonymousUser':
+            profile = UserProfile.objects.get(user__username=username)
+
+            # If the user is authenticated then use the users default shipping information as the shipping information
+            if save_info:
+                profile.default_phone_number = shipping_details.phone
+                profile.default_country = shipping_details.address.country
+                profile.default_postcode = shipping_details.address.postal_code
+                profile.default_town_or_city = shipping_details.address.city
+                profile.default_street_address1 = shipping_details.address.line1
+                profile.default_street_address2 = shipping_details.address.line2
+                profile.default_county = shipping_details.address.state
+                profile.save()
 
         order_exists = False
         """
@@ -96,6 +115,7 @@ class StripeWH_Handler:
                 try:
                     order = Order.objects.create(
                         full_name=shipping_details.name,
+                        user_profile=profile,
                         email=billing_details.name,
                         phone_number=shipping_details.phone,
                         country=shipping_details.address.country,
