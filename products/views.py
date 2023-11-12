@@ -1,9 +1,10 @@
 from django.shortcuts import render, redirect, reverse,  get_object_or_404
-from django.contrib import messages 
-# Generating a search query using the Q model 
+from django.contrib import messages
+# Generating a search query using the Q model
 from django.db.models import Q
 from .models import Product, Category
 from django.db.models.functions import Lower
+from products.forms import ProductForm
 
 # Create your views here.
 
@@ -19,8 +20,8 @@ def all_products(request):
 
     Using the '__' is common in django search and filtering and general query's by drilling into a related model
     This allows us to search for the related names of certain items in the models. If they are related by foreign keys
-    """ 
-    
+    """
+
     product = Product.objects.all()
     query = None
     category = None
@@ -47,7 +48,6 @@ def all_products(request):
                     sortkey = f'-{sortkey}'
             product = product.order_by(sortkey)
 
-
         if 'category' in request.GET:
             """
             By splitting the string into a list at the ',' we are then able to use that list as
@@ -57,13 +57,13 @@ def all_products(request):
             product = product.filter(category__name__in=category)
             category = Category.objects.filter(name__in=category)
 
-
         if 'q' in request.GET:
             query = request.GET['q']
             if not query:
-                messages.error(request, "You didn't enter any search criteria!")
+                messages.error(
+                    request, "You didn't enter any search criteria!")
                 return redirect(reverse('products'))
-            
+
             """
             The 'i' in front of the contains method ensures that the query isn't case sensitive
             Meaning it will return the same object no matter what the user or the database data
@@ -73,18 +73,17 @@ def all_products(request):
             were entered by the user in the search bar. Searching for matching data in the name and
             description.
 
-            The '|' is the or operator. Meaning this or that... 
+            The '|' is the or operator. Meaning this or that...
             """
-            queries = Q(name__icontains=query) | Q(description__icontains=query)
+            queries = Q(name__icontains=query) | Q(
+                description__icontains=query)
             product = product.filter(queries)
-
 
     current_sorting = f'{sort}_{direction}'
 
-
     """
     The context is allowing us to pass data through to the website front end of the website under certain
-    names. 
+    names.
 
     Such as the current_categories context will allow us to display what current category has been selected
     as a search parameter by the user on the front end of the website
@@ -95,17 +94,17 @@ def all_products(request):
         'current_categories': category,
         'current_sorting': current_sorting,
     }
- 
+
     return render(request, 'products.html', context)
 
 
 def product_detail(request, product_id):
     """
     View each product individually on its own page
-    Passing the individual primary key of the product to the url 
+    Passing the individual primary key of the product to the url
     Allowing the rendering of that products details on the page
     """
-    
+
     product = get_object_or_404(Product, pk=product_id)
 
     context = {
@@ -113,3 +112,22 @@ def product_detail(request, product_id):
     }
 
     return render(request, 'product_detail.html', context)
+
+
+def add_product(request):
+    """
+        Renders the product management page for the staff of the application
+    """
+
+    # Form to be used on the template
+    form = ProductForm()
+
+    # Template of the view
+    template = 'add_product.html'
+
+    # Context of the view
+    context = {
+        'form': form,
+    }
+
+    return render(request, template, context)
