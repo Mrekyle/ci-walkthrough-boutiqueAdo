@@ -84,6 +84,8 @@ def all_products(request):
 
     current_sorting = f'{sort}_{direction}'
 
+    template = 'products/products.html'
+
     """
     The context is allowing us to pass data through to the website front end of the website under certain
     names.
@@ -98,7 +100,7 @@ def all_products(request):
         'current_sorting': current_sorting,
     }
 
-    return render(request, 'products.html', context)
+    return render(request, template, context)
 
 
 def product_detail(request, product_id):
@@ -109,12 +111,12 @@ def product_detail(request, product_id):
     """
 
     product = get_object_or_404(Product, pk=product_id)
-
+    template = 'products/product_detail.html'
     context = {
         'product': product
     }
 
-    return render(request, 'product_detail.html', context)
+    return render(request, template, context)
 
 
 @login_required
@@ -155,7 +157,7 @@ def add_product(request):
         form = ProductForm()
 
     # Template of the view
-    template = 'add_product.html'
+    template = 'products/add_product.html'
 
     # Context of the view
     context = {
@@ -197,7 +199,7 @@ def edit_product(request, product_id):
         # Alerting the user of the product they are currently editing
         messages.info(request, f'You are currently editing {product.name}')
 
-    template = 'edit_product.html'
+    template = 'products/edit_product.html'
 
     context = {
         'form': form,

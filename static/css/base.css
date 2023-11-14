@@ -74,6 +74,34 @@ input[name='q']::placeholder {
     width: 1.5rem;
 }
 
+.btn-file {
+    position: relative;
+    overflow: hidden;
+}
+
+/* Ensuring the entire clickable area lives inside of the span. Appearing as though its all one button
+Making the button invisible so it looks like the user is just clicking on the button */
+.btn-file input[type="file"] {
+    position: absolute;
+    top: 0;
+    right: 0;
+    min-height: 100%;
+    min-width: 100%;
+    opacity: 0;
+    cursor: pointer;
+}
+
+.custom-checkbox .custom-control-label::before {
+    border-radius: 0;
+    border-color: #dc3545;
+}
+
+.custom-checkbox .custom-control-input:checked~.custom-control-label::before {
+    background-color: #dc3545;
+    border-color: #dc3545;
+    border-radius: 0;
+}
+
 .logo-font {
     text-transform: uppercase;
 }

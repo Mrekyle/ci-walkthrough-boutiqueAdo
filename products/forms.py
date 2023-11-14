@@ -14,19 +14,19 @@ class ProductForm(forms.ModelForm):
         # Includes all fields from the product model
         fields = '__all__'
 
-        image = forms.ImageField(
-            label='Image', required=False, widget=CustomClearableFileInput)
+    image = forms.ImageField(
+        label='Image', required=False, widget=CustomClearableFileInput)
 
-        def __init__(self, *args, **kwargs):
-            super().__init__(*args, **kwargs)
-            categories = Category.objects.all()
-            # For loop for creating a list of the categories friendly names
-            friendly_names = [(c.id, c.get_friendly_name())
-                              for c in categories]
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        categories = Category.objects.all()
+        # For loop for creating a list of the categories friendly names
+        friendly_names = [(c.id, c.get_friendly_name())
+                          for c in categories]
 
-            # Setting the fields in a drop down box for the friendly names of the categories. Instead of an id or name
-            self.fields['category'].choices = friendly_names
+        # Setting the fields in a drop down box for the friendly names of the categories. Instead of an id or name
+        self.fields['category'].choices = friendly_names
 
-            # Adding the rest of the fields with set classes to the form
-            for field.name, field in self.fields.items():
-                field.widget.attrs['class'] = 'border-black rounded-0'
+        # Adding the rest of the fields with set classes to the form
+        for field_name, field in self.fields.items():
+            field.widget.attrs['class'] = 'border-black rounded-0'

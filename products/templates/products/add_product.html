@@ -25,7 +25,13 @@
                 <!-- Including the enctype method to the form as this will ensure that the image is uploaded correctly -->
                 <form method="POST" action="{% url 'add_product' %}" class="form mb-2" enctype="multipart/form-data">
                     {% csrf_token %}
-                    {{ form|crispy }}
+                    {% for field in form %}
+                        {% if field.name != 'Image' %}
+                            {{ field| as_crispy_field }}
+                        {% else %}
+                            {{ field }}
+                        {% endif %}
+                    {% endfor %}
                     <div class="text-right">
                         <a class="btn btn-outline-black rounded-0" href="{% url 'products' %}">Cancel</a>
                         <button class="btn btn-black rounded-0" type="submit">Add Product</button>
@@ -34,4 +40,15 @@
             </div>
         </div>
     </div>
+{% endblock %}
+
+{% block postloadjs %}
+    {{ block.super }}
+    <!-- Alerting the user to the change of the product image by letting them know the new images name  -->
+    <script type="text/javascript">
+        $('#new-image').change(function () {
+            var file = $('#new-image')[0].files[0];
+            $('#filename').text('Image will be set to: ${file.name}');
+        })
+    </script>
 {% endblock %}
