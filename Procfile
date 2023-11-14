@@ -1,1 +1,1 @@
-web: gunicorn botiquqAdo.wsgi 
+web: gunicorn botiquqAdo.wsgi:application
