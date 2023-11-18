@@ -104,11 +104,6 @@ AUTHENTICATION_BACKENDS = (
 
 SITE_ID = 1
 
-# Handles the backend emails of the application
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
-
-# Default from email that is used to send the confirmation emails to the user after a purchase from the store
-DEFAULT_FROM_EMAIL = 'botiqueado@example.com'
 
 # Allows authentication using either username or email
 ACCOUNT_AUTHENTICATION_METHOD = 'username_email'
@@ -124,6 +119,34 @@ ACCOUNT_SIGNUP_EMAIL_ENTER_TWICE = True
 
 # Tells django auth that the minimum characters for an account name is 4
 ACCOUNT_USERNAME_MIN_LENGTH = 4
+
+"""
+Sending emails with django is pretty easy. All that is needed to do is create an app password on the gmail account in question.
+By going to settings, login, security and searching for app passwords. 
+
+Then by adding the account email address and password as a config var on heroku.
+
+EMAIL_HOST_USER = Email address in question
+EMAIL_HOST_PASS = Password gotten from the app password on google 
+
+Then we need to set in the settings file that in case of a development environment. Log the emails to the console. 
+And if in production, to use the actual live email service
+
+"""
+
+if 'DEVELOPMENT' in os.environ:
+    # Handles the backend emails of the application
+    EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+    # Default from email that is used to send the confirmation emails to the user after a purchase from the store
+    DEFAULT_FROM_EMAIL = 'botiqueado@example.com'
+else:
+    EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+    EMAIL_USE_TLS = True
+    EMAIL_PORT = 587
+    EMAIL_HOST = 'smtp.google.com'
+    EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER')
+    DEFAULT_FROM_EMAIL = os.environ.get('EMAIL_HOST_USER')
+    EMAIL_HOST_PASS = os.environ.get('EMAIL_HOST_PASS')
 
 # Tells django the login urls to be used
 LOGIN_URL = '/accounts/login/'
